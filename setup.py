@@ -8,6 +8,7 @@ from hockey_reference import fetch_player
 sql = '''
 CREATE TABLE players (
      id INTEGER PRIMARY KEY,
+     player_id TEXT,
      name TEXT,
      position TEXT,
      date DATE,
@@ -32,12 +33,16 @@ player_ids = [
     'burnsbr01', # brent burns
     'karlser01', # karlsson
     'kapanka01', # kapanen
+    'muzzija01', # muzzin
+    'nylanwi01', # nylander
+    'dermotr01', # dermott
+    'hymanza01', # hyman
 ]
 
 data = pd.DataFrame()
 for player_id in tqdm(player_ids):
-    di = fetch_player(player_id)
-    data = data.append(di)
+    d = fetch_player(player_id)
+    data = data.append(d)
     time.sleep(2)
 
 data = data.sort_values(['date', 'name']).reset_index(drop=True)
