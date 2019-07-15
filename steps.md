@@ -1,3 +1,13 @@
+Convert the model to a script:
+
+```
+jupyter nbconvert --to script model.ipynb
+```
+
+
+
+
+
 ```python
 python -m venv env
 source env/bin/activate
