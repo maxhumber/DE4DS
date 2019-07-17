@@ -2,7 +2,7 @@
 .env
 airflow/airflow.cfg
 airflow/airflow.db
-airflow/unittest.cfg
+airflow/unittests.cfg
 airflow/logs/
 
 # Byte-compiled / optimized / DLL files
