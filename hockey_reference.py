@@ -1,4 +1,6 @@
 import re
+import sqlite3
+import time
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -55,3 +57,28 @@ def fetch_player(player_id, date=None):
     if date:
         return df[df['date'] == date]
     return df
+
+def fetch_players(date):
+    player_ids = [
+        'tavarjo01', # tavares
+        'ovechal01', # ovi
+        'mcdavco01', # mcjesus
+        'matthau01', # austen
+    ]
+    data = pd.DataFrame()
+    for player_id in player_ids:
+        d = fetch_player(player_id, date)
+        data = data.append(d)
+        time.sleep(2)
+    return data
+
+if __name__ == '__main__':
+    con = sqlite3.connect('data/hockey.db')
+    df = None
+    try:
+        df = fetch_players('2019-02-15')
+        df.to_sql(name='players', con=con, if_exists='append', index=False)
+        print('Success!')
+    except AttributeError:
+        pass
+    con.close()

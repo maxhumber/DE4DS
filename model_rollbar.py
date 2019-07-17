@@ -7,14 +7,15 @@ from sklearn.preprocessing import LabelBinarizer, StandardScaler
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import make_pipeline
 
-#! pip install rollbar
-import rollbar
+# new imports
+import rollbar # pip install rollbar
+from dotenv import load_dotenv # pip install python-dotenv
+from dotenv import find_dotenv
 
-# !pip install -U python-dotenv
-from dotenv import load_dotenv, find_dotenv
-
+# find the dotenv file if it lives beside this script
 load_dotenv(find_dotenv())
 
+# load the key-value secret
 ROLLBAR = os.getenv('ROLLBAR')
 rollbar.init(ROLLBAR)
 
@@ -42,7 +43,7 @@ train = pd.merge(X, y, left_index=True, right_index=True, suffixes=('', '_next')
 target = 'goals_next'
 X_train = train.drop(target, axis=1)
 y_train = train[target]
-# ENDTODO
+# END EXTRACT
 
 mapper = DataFrameMapper([
     ('position', [CategoricalImputer(), LabelBinarizer()]),
@@ -58,6 +59,7 @@ pipe = make_pipeline(mapper, model)
 pipe.fit(X_train, y_train)
 score = pipe.score(X_train, y_train)
 
+# sound the alarm if below
 threshold = 0.10
 if score < threshold:
     rollbar.report_message(

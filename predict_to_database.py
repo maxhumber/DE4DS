@@ -21,8 +21,6 @@ def fetch_player_data(player_id):
     ''', con)
     return X
 
-player_id = 'ovechal01'
-
 def predict(player_id):
     X = fetch_player_data(player_id)
     date = X['date'].max()

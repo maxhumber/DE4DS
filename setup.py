@@ -1,10 +1,10 @@
 import time
 import sqlite3
 import pandas as pd
-from tqdm import tqdm
 
 from hockey_reference import fetch_player
 
+# code to create the players table
 sql = '''
 CREATE TABLE players (
      id INTEGER PRIMARY KEY,
@@ -23,6 +23,7 @@ CREATE TABLE players (
 );
 '''
 
+# players to model
 player_ids = [
     'tavarjo01', # tavares
     'ovechal01', # ovi
@@ -39,18 +40,19 @@ player_ids = [
     'hymanza01', # hyman
 ]
 
+# fetch players and pretend that it's Valentines 2019
 data = pd.DataFrame()
-for player_id in tqdm(player_ids):
+for player_id in player_ids:
     d = fetch_player(player_id)
     data = data.append(d)
     time.sleep(2)
-
 data = data.sort_values(['date', 'name']).reset_index(drop=True)
 data = data[data['date'] <= '2019-02-14']
 
+# seed database with the above data
 con = sqlite3.connect('data/hockey.db')
 cur = con.cursor()
 cur.execute(sql)
-data.to_sql(name='players', con=con, if_exists='append', index=False)
+data.to_sql(name='players', con=con, if_exists='replace', index=False)
 con.commit()
 con.close()

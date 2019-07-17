@@ -1,6 +1,7 @@
 import pandas as pd
 
 def prep_data(df):
+    '''Five game rolling average stats'''
     rolling = (
         df
         .groupby(['player_id', 'position'])
