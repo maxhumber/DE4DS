@@ -1,3 +1,10 @@
+# Custom
+.env
+airflow/airflow.cfg
+airflow/airflow.db
+airflow/unittest.cfg
+airflow/logs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
