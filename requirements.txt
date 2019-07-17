@@ -1,0 +1,4 @@
+sklearn-pandas
+fire
+rollbar
+python-dotenv
