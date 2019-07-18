@@ -14,5 +14,5 @@ def goals(player_nickname):
 goals('ovi')
 
 # <your code here>
-# take the goals function and make it into a cli with fire
+# take the goals function and turn it into a cli with fire
 # try to access "mcjesus" aka (Connor McDavid)

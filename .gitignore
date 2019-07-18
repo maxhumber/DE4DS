@@ -4,6 +4,7 @@ airflow/airflow.cfg
 airflow/airflow.db
 airflow/unittests.cfg
 airflow/logs/
+airflow-webserver.pid
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

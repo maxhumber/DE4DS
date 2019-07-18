@@ -1,60 +1,60 @@
+import sys
+
+HOME='/Users/max/Repos/air'
+sys.path.append(HOME) # needed for custom imports
+
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
+from airflow.operators.python_operator import PythonOperator
 from datetime import datetime, timedelta
+
+import pandas as pd
+import sqlite3
 
 from hockey_reference import fetch_player
 
 default_args = {
-    'owner': 'airflow',
-    'start_date': datetime(2015, 6, 1),
+    'owner': 'Max',
+    'start_date': datetime(2019, 7, 17),
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
 }
 
-dag = DAG('hockey', default_args=default_args, schedule_interval=timedelta(days=1))
-
-# 1 fetch new data (fake date)
-# hockey_refernce.py
-
-# 2 train new model
-# model_rollbar.py
-
-# predict and add predictions to sql
-# predict_to_database.py
-
-t1 = PythonOperator(
-    task_id='fetch_player',
-    provide_context=True,
-    python_callable=fetch_player,
-    op_kwargs={'player_id': 'ovechal01', 'date': 2019-02-17'}
-    dag=dag,
+dag = DAG(
+    'hockey',
+    default_args=default_args,
+    schedule_interval=timedelta(days=1)
 )
 
-# # fetch new data
-# t1 = BashOperator(
-#     task_id='fetch data',
-#     bash_command='python hockey',
-#     dag=dag)
-#
-# t2 = BashOperator(
-#     task_id='sleep',
-#     bash_command='sleep 5',
-#     retries=3,
-#     dag=dag)
-#
-# templated_command = """
-#     {% for i in range(5) %}
-#         echo "{{ ds }}"
-#         echo "{{ macros.ds_add(ds, 7)}}"
-#         echo "{{ params.my_param }}"
-#     {% endfor %}
-# """
-#
-# t3 = BashOperator(
-#     task_id='templated',
-#     bash_command=templated_command,
-#     params={'my_param': 'Parameter I passed in'},
-#     dag=dag)
-#
-# t2.set_upstream(t1)
-# t3.set_upstream(t1)
+# customize function to accept context
+def fetch(**context):
+    date = context['execution_date'].strftime('%Y-%m-%d')
+    players = [
+        'tavarjo01', # tavares
+        'ovechal01', # ovi
+        'mcdavco01', # mcjesus
+        'matthau01', # austen
+    ]
+    data = pd.DataFrame()
+    for player_id in players:
+        di = fetch_player(player_id, date)
+        data = data.append(di)
+    con = sqlite3.connect(f'{HOME}/data/hockey.db')
+    data.to_sql('players', con, if_exists='append', index=False)
+    con.close()
+
+# the actual tasks
+t1 = PythonOperator(
+    task_id='fetch',
+    python_callable=fetch,
+    provide_context=True,
+    dag=dag
+)
+
+t2 = BashOperator(
+    task_id='model',
+    bash_command=f'cd {HOME}; python model_continuous.py',
+    dag=dag)
+
+# order the tasks (set t2 downstream)
+t1 >> t2

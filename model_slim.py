@@ -1,6 +1,5 @@
 import pickle
 import os
-import sqlite3
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn_pandas import DataFrameMapper, CategoricalImputer
@@ -8,22 +7,9 @@ from sklearn.preprocessing import LabelBinarizer, StandardScaler
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import make_pipeline
 
-# new imports
-import rollbar # pip install rollbar
-from dotenv import load_dotenv # pip install python-dotenv
-from dotenv import find_dotenv
-
-# find the dotenv file if it lives beside this script
-load_dotenv(find_dotenv())
-
-# load the key-value secret
-ROLLBAR = os.getenv('ROLLBAR')
-rollbar.init(ROLLBAR)
-
 df = pd.read_csv('data/hockey.csv')
 df['date'] = df['date'].apply(pd.to_datetime)
 
-# TODO: extract this to a helpers.py file
 X = (
     df
     .groupby(['player_id', 'position'])
@@ -44,7 +30,6 @@ train = pd.merge(X, y, left_index=True, right_index=True, suffixes=('', '_next')
 target = 'goals_next'
 X_train = train.drop(target, axis=1)
 y_train = train[target]
-# END EXTRACT
 
 mapper = DataFrameMapper([
     ('position', [CategoricalImputer(), LabelBinarizer()]),
@@ -58,14 +43,6 @@ model = LinearRegression()
 
 pipe = make_pipeline(mapper, model)
 pipe.fit(X_train, y_train)
-score = pipe.score(X_train, y_train)
-
-# sound the alarm if below
-threshold = 0.10
-if score < threshold:
-    rollbar.report_message(
-        f'score ({score}) is below acceptable threshold ({threshold})'
-    )
 
 with open('pickles/pipe.pkl', 'wb') as f:
     pickle.dump(pipe, f)
