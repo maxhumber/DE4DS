@@ -1,5 +1,5 @@
-### Data Engineering for Data Scientists
+### ⭕️ Data Engineering for Data Scientists
 
-Materials for the O'Reilly Live Online Training.
+Materials for the O'Reilly Online Live Training.
 
-Presented by Max Humber on August 6, 2019.
+Presented by Max Humber on October 1, 2019.
