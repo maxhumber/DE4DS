@@ -2,4 +2,4 @@
 
 Materials for the O'Reilly Online Live Training.
 
-Presented by Max Humber on October 1, 2019.
+Presented by Max Humber on December 6, 2019.
