@@ -1,21 +1,17 @@
-import re
-import sqlite3
-import time
-import requests
+from gazpacho import get, Soup
 import pandas as pd
-from bs4 import BeautifulSoup
 
 def download(player_id):
-    url = f'https://www.hockey-reference.com/players/{player_id[0]}/{player_id}/gamelog/2019'
-    r = requests.get(url)
-    soup = BeautifulSoup(r.text, features='lxml')
-    meta = ''.join([s.text for s in soup.select('#meta p')]).replace('\xa0', '')
-    table = soup.find_all(class_='overthrow table_container')[0]
+    url = f'https://www.hockey-reference.com/players/{player_id[0]}/{player_id}/gamelog/2020'
+    html = get(url)
+    soup = Soup(html)
+    table = soup.find('table', {'id': "gamelog"})
     df = pd.read_html(str(table))[0]
     df.columns = ['_'.join(col) for col in df.columns]
     df['name'] = soup.find('h1').text
     df['player_id'] = player_id
-    df['position'] = re.findall('(?<=\:\s).+?(?=\•|\n)', meta)[0]
+    meta = soup.find('div', {'id':'meta'}).find('p', mode='first').remove_tags()
+    df['position'] = meta.split(': ')[1].split(' •')[0]
     return df
 
 def clean(df):
