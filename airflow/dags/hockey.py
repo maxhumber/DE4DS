@@ -30,7 +30,7 @@ dag = DAG(
 def fetch(**context):
     date = context['execution_date'].strftime('%Y-%m-%d')
     players = [
-        'tavarjo01', # tavares
+        'nylanwi01', # willy
         'ovechal01', # ovi
         'mcdavco01', # mcjesus
         'matthau01', # austen
