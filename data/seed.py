@@ -17,8 +17,11 @@ players = [
     'mackina01',
     'carlsjo01',
     'eicheja01',
-    'tavarjo01',
-    'nylanwi01'
+    'nylanwi01',
+    'millejt01',
+    'perroda01',
+    'scheima01',
+    'webersh01',
 ]
 
 df = pd.DataFrame()
@@ -29,3 +32,4 @@ for player in tqdm(players):
 
 df = df.reset_index(drop=True)
 df.to_sql('players', con, index=False, if_exists='replace')
+df.to_csv('data/hockey.csv', index=False)
