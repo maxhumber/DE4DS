@@ -1,6 +1,6 @@
 import sys
 
-HOME='/Users/max/Repos/air'
+HOME='/Users/max/Repos/DE4DS'
 sys.path.append(HOME) # needed for custom imports
 
 from airflow import DAG
