@@ -11,11 +11,11 @@ from datetime import datetime, timedelta
 import pandas as pd
 import sqlite3
 
-from scrape import fetch_player
+from data.scrape import player
 
 default_args = {
     "owner": "Max",
-    "start_date": datetime(2019, 7, 17),
+    "start_date": datetime(2020, 2, 2),
     "retries": 1,
     "retry_delay": timedelta(minutes=5),
 }
@@ -33,7 +33,7 @@ def fetch(**context):
     ]
     data = pd.DataFrame()
     for player_id in players:
-        di = fetch_player(player_id, date)
+        di = player(player_id, date)
         data = data.append(di)
     con = sqlite3.connect(f"{HOME}/data/hockey.db")
     data.to_sql("players", con, if_exists="append", index=False)

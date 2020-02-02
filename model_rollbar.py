@@ -23,7 +23,6 @@ rollbar.init(ROLLBAR)
 df = pd.read_csv("data/hockey.csv")
 df["date"] = df["date"].apply(pd.to_datetime)
 
-# TODO: extract this to a helpers.py file
 X = (
     df.groupby(["player_id", "position"])[["goals", "assists", "shots", "ice_time"]]
     .rolling(5)
@@ -41,7 +40,6 @@ train = pd.merge(X, y, left_index=True, right_index=True, suffixes=("", "_next")
 target = "goals_next"
 X_train = train.drop(target, axis=1)
 y_train = train[target]
-# END EXTRACT
 
 mapper = DataFrameMapper(
     [
