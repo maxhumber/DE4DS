@@ -1,7 +1,6 @@
 import pickle
 import sqlite3
 import pandas as pd
-from helpers import prep_data
 
 from fire import Fire
 
