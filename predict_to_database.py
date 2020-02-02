@@ -18,12 +18,25 @@ def fetch_player_data(player_id):
         *
         from players
         where player_id = "{player_id}"
-        order by date asc
+        order by date desc
         limit 5
-    """,
-        con,
-    )
+        """, con
+    ).sort_values('date')
     return X
+
+
+def prep_data(df):
+    """Five game rolling average stats"""
+    rolling = (
+        df.groupby(["player_id", "position"])[["goals", "assists", "shots", "ice_time"]]
+        .rolling(5)
+        .mean()
+        .reset_index()
+        .rename(columns={"level_2": "index"})
+        .set_index("index")
+        .dropna(subset=["goals"])[["position", "goals", "assists", "shots", "ice_time"]]
+    )
+    return rolling
 
 
 def predict(player_id):
