@@ -1,16 +1,15 @@
 import pandas as pd
 from fire import Fire
 
-df = pd.DataFrame(
-    {"player": ["ovi", "mcjesus", "tavares", "muzzin"], "goals": [51, 41, 47, 9]}
-)
+df = pd.DataFrame({
+    "player": ["ovi", "mcjesus", "tavares", "muzzin"],
+    "goals": [51, 41, 47, 9]
+    })
 
 player_nickname = "ovi"
 
-
 def goals(player_nickname):
     return df[df.player == player_nickname]["goals"].values[0]
-
 
 goals("ovi")
 

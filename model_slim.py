@@ -1,5 +1,4 @@
 import pickle
-import os
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn_pandas import DataFrameMapper, CategoricalImputer

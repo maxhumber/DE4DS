@@ -2,8 +2,6 @@ import pickle
 import sqlite3
 import pandas as pd
 
-from helpers import prep_data
-
 con = sqlite3.connect("data/hockey.db")
 
 player_id = "ovechal01"
@@ -14,13 +12,20 @@ new = pd.read_sql(
     *
     from players
     where player_id = "{player_id}"
-    order by date asc
+    order by date desc
     limit 5
-""",
-    con,
-)
+    """, con
+).sort_values('date')
 
-X = prep_data(new)
+X = (new
+        .groupby(["player_id", "position"])[["goals", "assists", "shots", "ice_time"]]
+        .rolling(5)
+        .mean()
+        .reset_index()
+        .rename(columns={"level_2": "index"})
+        .set_index("index")
+        .dropna(subset=["goals"])[["position", "goals", "assists", "shots", "ice_time"]]
+    )
 
 with open("pickles/pipe.pkl", "rb") as f:
     pipe = pickle.load(f)
