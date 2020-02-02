@@ -1,5 +1,26 @@
-### ⭕️ Data Engineering for Data Scientists
+![O'Reilly home](https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg)
 
-Materials for the O'Reilly Online Live Training.
 
-Presented by Max Humber on December 6, 2019.
+
+### Data Engineering for Data Scientists
+
+Materials for the Live Online Training
+
+Presented by Max Humber on February 6, 2020
+
+
+
+#### Install
+
+```sh
+pip install sklearn-pandas
+pip install fire
+pip install rollbar
+pip install python-dotenv
+pip install apache-airflow
+```
+
+
+
+
+
