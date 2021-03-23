@@ -4,7 +4,7 @@ import pandas as pd
 
 from fire import Fire
 
-con = sqlite3.connect("data/basketball.db")
+con = sqlite3.connect("data/football.db")
 
 with open("pickles/pipe.pkl", "rb") as f:
     pipe = pickle.load(f)
@@ -14,19 +14,19 @@ def fetch_player_data(name):
         f"""
         select
         *
-        from players
+        from yards
         where name = '{name}'
-        order by date desc
+        order by week desc
         limit 2
         """, con
-    ).sort_values('date', ascending=False)
+    ).sort_values('week', ascending=False)
     return player
 
 def prep_data(player):
     X_new = pd.DataFrame({
         'position': [player.position[0]],
-        'points_1': [player.points[0]],
-        'points_2': [player.points[1]]
+        'yards_1': [player.yards[0]],
+        'yards_2': [player.yards[1]]
     })
     return X_new
 

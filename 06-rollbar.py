@@ -19,15 +19,15 @@ load_dotenv(find_dotenv())
 ROLLBAR = os.getenv("ROLLBAR")
 rollbar.init(ROLLBAR)
 
-df = pd.read_csv('data/basketball.csv', parse_dates=[4])
-df = df.sort_values(['name', 'date']).reset_index(drop=True)
-df['points_1'] = df.groupby('name')['points'].shift(1)
-df['points_2'] = df.groupby('name')['points'].shift(2)
-df = df.dropna(subset=["points_1", "points_2"])
+df = pd.read_csv('data/football.csv')
+df = df.sort_values(['name', 'week']).reset_index(drop=True)
+df['yards_1'] = df.groupby('name')['yards'].shift(1)
+df['yards_2'] = df.groupby('name')['yards'].shift(2)
+df = df.dropna(subset=["yards_1", "yards_2"])
 
-target = 'points'
+target = 'yards'
 y = df[target]
-X = df[['position', 'points_1', 'points_2']]
+X = df[['position', 'yards_1', 'yards_2']]
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y,
@@ -38,8 +38,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 mapper = DataFrameMapper([
     (['position'], [SimpleImputer(strategy="most_frequent"), LabelBinarizer()]),
-    (['points_1'], [SimpleImputer(), StandardScaler()]),
-    (['points_2'], [SimpleImputer(), StandardScaler()]),
+    (['yards_1'], [SimpleImputer(), StandardScaler()]),
+    (['yards_2'], [SimpleImputer(), StandardScaler()]),
 ], df_out=True)
 
 model = LinearRegression()
@@ -49,7 +49,7 @@ pipe.fit(X_train, y_train)
 score = round(pipe.score(X_train, y_train), 2)
 
 # sound the alarm if below
-threshold = 0.45
+threshold = 0.80
 if score < threshold:
     rollbar.report_message(
         f"score ({score}) is below acceptable threshold ({threshold})"

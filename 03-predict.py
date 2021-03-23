@@ -2,25 +2,25 @@ import pickle
 import sqlite3
 import pandas as pd
 
-con = sqlite3.connect("data/basketball.db")
+con = sqlite3.connect("data/football.db")
 
-name = "Kawhi Leonard"
+name = "Aaron Rodgers"
 
 player = pd.read_sql(
     f"""
     select
     *
-    from players
+    from yards
     where name = '{name}'
-    order by date desc
+    order by week desc
     limit 2
     """, con
-).sort_values('date', ascending=False)
+)
 
 X_new = pd.DataFrame({
     'position': [player.position[0]],
-    'points_1': [player.points[0]],
-    'points_2': [player.points[1]]
+    'yards_1': [player.yards[0]],
+    'yards_2': [player.yards[1]]
 })
 
 with open("pickles/pipe.pkl", "rb") as f:
