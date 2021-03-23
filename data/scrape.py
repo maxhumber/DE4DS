@@ -31,12 +31,7 @@ def get_game_stats(url):
     html = get(url)
     soup = Soup(html)
     rows = soup.find("div", {"class": "BoxScore__statLine"})
-    data = []
-    for row in rows:
-        try:
-            data.append(parse_stat_row(row))
-        except:
-            pass
+    data = [parse_stat_row(row) for row in rows]
     return data
 
 def get_games(date):
@@ -51,7 +46,8 @@ def get_games(date):
 
 if __name__ == "__main__":
     con = sqlite3.connect("data/basketball.db")
-    dates = pd.date_range(start="2020-12-22", end="today")
+
+    dates = pd.date_range(start="2020-07-30", end="today")
     df = pd.DataFrame()
     for date in tqdm(dates):
         try:
@@ -60,6 +56,8 @@ if __name__ == "__main__":
             time.sleep(random.uniform(1, 10)/10)
         except TypeError:
             pass
+
     df = df.reset_index(drop=True)
+
     df.to_csv("data/basketball.csv", index=False)
     df.to_sql(name="players", con=con, if_exists="replace", index=False)
