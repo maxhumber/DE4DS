@@ -45,5 +45,5 @@ def predict(player):
     print("Success!")
 
 if __name__ == "__main__":
-    # "Kyle Lowery"
+    # "Marcus Smart"
     Fire(predict)

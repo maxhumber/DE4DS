@@ -4,7 +4,7 @@ import pandas as pd
 
 con = sqlite3.connect("data/basketball.db")
 
-name = "Kawhi Leonard"
+name = "Kevin Durant"
 
 player = pd.read_sql(
     f"""
