@@ -6,7 +6,7 @@
 
 Materials for the Live Online Training
 
-Presented by Max Humber on September 28, 2021
+Presented by Max Humber on May 28, 2021
 
 
 
@@ -19,8 +19,3 @@ pip install rollbar
 pip install python-dotenv
 pip install apache-airflow
 ```
-
-
-
-
-
