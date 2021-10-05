@@ -1,10 +1,11 @@
-from gazpacho import get, Soup
-import pandas as pd
-from itertools import product
-from tqdm import tqdm
-import time
 import random
 import sqlite3
+import time
+from itertools import product
+
+import pandas as pd
+from gazpacho import Soup, get
+from tqdm import tqdm
 
 base = "https://www.thescore.com"
 
@@ -51,8 +52,10 @@ def get_games(date):
 
 if __name__ == "__main__":
     con = sqlite3.connect("data/basketball.db")
-    dates = pd.date_range(start="2020-12-22", end="today")
+    date = "2021-10-03"
+    dates = pd.date_range(start="2020-12-22", end="2021-05-16")
     df = pd.DataFrame()
+    date = dates[-1]
     for date in tqdm(dates):
         try:
             games = get_games(date)

@@ -1,7 +1,7 @@
 import pickle
 import sqlite3
-import pandas as pd
 
+import pandas as pd
 from fire import Fire
 
 con = sqlite3.connect("data/basketball.db")

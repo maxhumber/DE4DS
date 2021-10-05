@@ -1,16 +1,16 @@
 import os
 import pickle
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import LabelBinarizer, StandardScaler
-from sklearn.impute import SimpleImputer
-from sklearn_pandas import DataFrameMapper
-from sklearn.pipeline import make_pipeline
 
+import pandas as pd
 # new imports
 import rollbar  # pip install rollbar
-from dotenv import load_dotenv, find_dotenv  # pip install python-dotenv
+from dotenv import find_dotenv, load_dotenv  # pip install python-dotenv
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import LabelBinarizer, StandardScaler
+from sklearn_pandas import DataFrameMapper
 
 # find the dotenv file if it lives beside this script
 load_dotenv(find_dotenv())

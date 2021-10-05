@@ -1,11 +1,12 @@
 import pickle
+
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import LabelBinarizer, StandardScaler
 from sklearn.impute import SimpleImputer
-from sklearn_pandas import DataFrameMapper
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import LabelBinarizer, StandardScaler
+from sklearn_pandas import DataFrameMapper
 
 df = pd.read_csv('data/basketball.csv', parse_dates=[4])
 df = df.sort_values(['name', 'date']).reset_index(drop=True)

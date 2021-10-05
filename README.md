@@ -6,8 +6,6 @@
 
 Materials for the Live Online Training
 
-Presented by Max Humber on May 28, 2021
-
 
 
 #### Install

@@ -1,11 +1,12 @@
-import sys
 import sqlite3
+import sys
 from datetime import datetime, timedelta
 
 import pandas as pd
-from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
+
+from airflow import DAG
 
 HOME = "/Users/max/Courses/DE4DS"
 sys.path.append(HOME)  # needed for custom imports
