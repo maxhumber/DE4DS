@@ -3,9 +3,9 @@ import sqlite3
 
 import pandas as pd
 
-con = sqlite3.connect("data/basketball.db")
+con = sqlite3.connect("data/football.db")
 
-name = "Kevin Durant"
+name = "Tom Brady"
 
 player = pd.read_sql(
     f"""
@@ -18,10 +18,12 @@ player = pd.read_sql(
     """, con
 ).sort_values('date', ascending=False)
 
+player["yards"] = player["passing"] + player["rushing"] + player["receiving"]
+
 X_new = pd.DataFrame({
     'position': [player.position[0]],
-    'points_1': [player.points[0]],
-    'points_2': [player.points[1]]
+    'yards_1': [player.yards[0]],
+    'yards_2': [player.yards[1]]
 })
 
 with open("pickles/pipe.pkl", "rb") as f:
