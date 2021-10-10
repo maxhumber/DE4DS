@@ -4,9 +4,9 @@ import time
 
 import pandas as pd
 from gazpacho import Soup
-from tqdm import tqdm
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
+from tqdm import tqdm
 
 # setup browser
 
@@ -16,6 +16,7 @@ browser = Firefox(executable_path="/usr/local/bin/geckodriver", options=options)
 base = "https://www.pro-football-reference.com"
 
 # boxscores
+
 
 def get_boxscore_urls(date):
     if isinstance(date, pd.Timestamp):
@@ -35,7 +36,9 @@ def get_boxscore_urls(date):
             pass
     return urls
 
+
 # soup
+
 
 def get_soup(url):
     browser.get(url)
@@ -43,7 +46,9 @@ def get_soup(url):
     soup = Soup(html)
     return soup
 
+
 # positions
+
 
 def get_positions(soup):
     df = pd.DataFrame()
@@ -54,23 +59,29 @@ def get_positions(soup):
     df.columns = ["name", "position"]
     return df
 
+
 # stats
+
 
 def get_stats(soup):
     stat_table = soup.find("table", {"id": "player_offense"})
     df = pd.read_html(str(stat_table))[0]
     df.columns = ["_".join(a) for a in df.columns.to_flat_index()]
-    df = df.rename(columns={
-        "Unnamed: 0_level_0_Player": "name",
-        'Unnamed: 1_level_0_Tm': "team",
-        "Passing_Yds": "passing",
-        "Rushing_Yds": "rushing",
-        "Receiving_Yds": "receiving",
-    })
+    df = df.rename(
+        columns={
+            "Unnamed: 0_level_0_Player": "name",
+            "Unnamed: 1_level_0_Tm": "team",
+            "Passing_Yds": "passing",
+            "Rushing_Yds": "rushing",
+            "Receiving_Yds": "receiving",
+        }
+    )
     df = df[["name", "team", "passing", "rushing", "receiving"]]
     return df
 
+
 # combine
+
 
 def get_game_stats(url):
     soup = get_soup(url)
@@ -80,16 +91,19 @@ def get_game_stats(url):
     df = df[["team", "name", "position", "passing", "rushing", "receiving"]]
     return df
 
+
 # all games
+
 
 def get_games(date):
     urls = get_boxscore_urls(date)
     df = pd.DataFrame()
     for url in urls:
         one = get_game_stats(url)
-        one['date'] = date
+        one["date"] = date
         df = df.append(one)
     return df
+
 
 if __name__ == "__main__":
     con = sqlite3.connect("data/football.db")
@@ -99,7 +113,7 @@ if __name__ == "__main__":
         try:
             games = get_games(date)
             df = df.append(games)
-            time.sleep(random.uniform(1, 10)/10)
+            time.sleep(random.uniform(1, 10) / 10)
         except TypeError:
             pass
     df = df.reset_index(drop=True)

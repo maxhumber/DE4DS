@@ -32,6 +32,7 @@ def fetch(**context):
     df.to_sql("players", con, if_exists="append", index=False)
     con.close()
 
+
 # the actual tasks
 t1 = PythonOperator(
     task_id="fetch", python_callable=fetch, provide_context=True, dag=dag
