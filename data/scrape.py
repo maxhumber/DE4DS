@@ -22,7 +22,8 @@ def get_boxscore_urls(date):
     if isinstance(date, pd.Timestamp):
         date = date.strftime("%Y-%m-%d")
     url = base + f"/years/{date[:4]}/games.htm"
-    soup = Soup.get(url)
+    browser.get(url)
+    soup = Soup(browser.page_source)
     trs = soup.find("table", {"id": "games"}).find("tr")
     urls = []
     for tr in trs:

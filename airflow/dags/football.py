@@ -26,7 +26,7 @@ dag = DAG("football", default_args=default_args, schedule_interval=timedelta(day
 # customize function to accept context
 def fetch(**context):
     date = context["execution_date"].strftime("%Y-%m-%d")
-    # date = "2021-10-10"
+    # date = "2021-10-07"
     df = get_games(date)
     con = sqlite3.connect(f"{HOME}/data/football.db")
     df.to_sql("players", con, if_exists="append", index=False)
