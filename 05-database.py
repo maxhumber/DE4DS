@@ -35,12 +35,12 @@ def predict(player):
     X = fetch_player_data(player)
     date = X["date"].max()
     X = prep_data(X)
-    points = round(pipe.predict(X)[0], 2)
+    yards = round(pipe.predict(X)[0], 2)
     df = pd.DataFrame({
         "date_created": pd.Timestamp("now"),
         "name": [player],
         "last_game": [date],
-        "points": [points],
+        "yards": [yards],
     })
     df.to_sql("predictions", con, if_exists="append", index=False)
     print("Success!")
