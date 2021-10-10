@@ -16,19 +16,19 @@ from data.scrape import get_games
 # setup
 default_args = {
     "owner": "Max",
-    "start_date": datetime(2021, 5, 28),
+    "start_date": datetime(2021, 10, 11),
     "retries": 1,
     "retry_delay": timedelta(minutes=5),
 }
 
-dag = DAG("basketball", default_args=default_args, schedule_interval=timedelta(days=1))
+dag = DAG("football", default_args=default_args, schedule_interval=timedelta(days=1))
 
 # customize function to accept context
 def fetch(**context):
     date = context["execution_date"].strftime("%Y-%m-%d")
-    # date = "2021-05-27"
+    # date = "2021-10-10"
     df = get_games(date)
-    con = sqlite3.connect(f"{HOME}/data/basketball.db")
+    con = sqlite3.connect(f"{HOME}/data/football.db")
     df.to_sql("players", con, if_exists="append", index=False)
     con.close()
 
