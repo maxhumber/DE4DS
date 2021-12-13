@@ -51,7 +51,7 @@ pipe.fit(X_train, y_train)
 score = round(pipe.score(X_train, y_train), 2)
 
 # sound the alarm if below
-threshold = 0.85
+threshold = 0.80
 if score < threshold:
     rollbar.report_message(
         f"score ({score}) is below acceptable threshold ({threshold})"
