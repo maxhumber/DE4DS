@@ -118,5 +118,6 @@ if __name__ == "__main__":
         except TypeError:
             pass
     df = df.reset_index(drop=True)
+    df[["passing", "rushing", "receiving"]] = df[["passing", "rushing", "receiving"]].apply(pd.to_numeric)
     df.to_csv("data/football.csv", index=False)
     df.to_sql(name="players", con=con, if_exists="replace", index=False)
