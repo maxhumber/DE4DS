@@ -5,6 +5,8 @@ airflow/airflow.db
 airflow/unittests.cfg
 airflow/logs/
 airflow-webserver.pid
+standalone_admin_password.txt
+webserver_config.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

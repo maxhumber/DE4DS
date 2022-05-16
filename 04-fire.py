@@ -2,9 +2,9 @@ import pickle
 import sqlite3
 
 import pandas as pd
-from fire import Fire
+import fire
 
-con = sqlite3.connect("data/football.db")
+con = sqlite3.connect("data/basketball.db")
 
 with open("pickles/pipe.pkl", "rb") as f:
     pipe = pickle.load(f)
@@ -26,12 +26,11 @@ def fetch_player_data(name):
 
 
 def prep_data(player):
-    player["yards"] = player["passing"] + player["rushing"] + player["receiving"]
     X_new = pd.DataFrame(
         {
             "position": [player.position[0]],
-            "yards_1": [player.yards[0]],
-            "yards_2": [player.yards[1]],
+            "points_1": [player.points[0]],
+            "points_2": [player.points[1]],
         }
     )
     return X_new
@@ -45,4 +44,4 @@ def predict(player):
 
 
 if __name__ == "__main__":
-    Fire(predict)
+    fire.Fire(predict)
