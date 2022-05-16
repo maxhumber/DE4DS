@@ -1,128 +1,69 @@
+from itertools import product
+import time
 import random
 import sqlite3
-import time
 
+from gazpacho import get, Soup
 import pandas as pd
-from gazpacho import Soup
-from selenium.webdriver import Firefox
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
 from tqdm import tqdm
 
 
-# setup browser
-
-options = Options()
-options.headless = True
-options.binary_location = "/Applications/Firefox.app/Contents/MacOS/firefox"
-service = Service("/usr/local/bin/geckodriver")
-browser = Firefox(service=service, options=options)
-base = "https://www.pro-football-reference.com"
+BASE = "https://basketball.realgm.com"
 
 
-# boxscores
+def parse_tr(tr):
+    try:
+        tds = tr.find("td")
+        name = tds[1].find("a").text
+        position = tds[3].text
+        points = int(tds[-1].text)
+        return name, position, points
+    except:
+        return
 
 
-def get_boxscore_urls(date):
-    if isinstance(date, pd.Timestamp):
-        date = date.strftime("%Y-%m-%d")
-    url = base + f"/years/{date[:4]}/games.htm"
-    browser.get(url)
-    soup = Soup(browser.page_source)
-    trs = soup.find("table", {"id": "games"}).find("tr")
-    urls = []
-    for tr in trs:
-        try:
-            game_date = tr.find("td", {"data-stat": "game_date"}).text
-            endpoint = tr.find("a", {"href": "boxscore"}).attrs["href"]
-            url = base + endpoint
-            if date == game_date:
-                urls.append(url)
-        except AttributeError:
-            pass
-    return urls
-
-
-# soup
-
-
-def get_soup(url):
-    browser.get(url)
-    html = browser.page_source
-    soup = Soup(html)
-    return soup
-
-
-# positions
-
-
-def get_positions(soup):
-    df = pd.DataFrame()
-    for team in ["home", "vis"]:
-        table = soup.find("table", {"id": f"{team}_starters"})
-        d = pd.read_html(str(table))[0]
-        df = df.append(d)
-    df.columns = ["name", "position"]
-    return df
-
-
-# stats
-
-
-def get_stats(soup):
-    stat_table = soup.find("table", {"id": "player_offense"})
-    df = pd.read_html(str(stat_table))[0]
-    df.columns = ["_".join(a) for a in df.columns.to_flat_index()]
-    df = df.rename(
-        columns={
-            "Unnamed: 0_level_0_Player": "name",
-            "Unnamed: 1_level_0_Tm": "team",
-            "Passing_Yds": "passing",
-            "Rushing_Yds": "rushing",
-            "Receiving_Yds": "receiving",
-        }
-    )
-    df = df[["name", "team", "passing", "rushing", "receiving"]]
-    return df
-
-
-# combine
-
-
-def get_game_stats(url):
-    soup = get_soup(url)
-    positions = get_positions(soup)
-    stats = get_stats(soup)
-    df = pd.merge(stats, positions, on="name", how="inner")
-    df = df[["team", "name", "position", "passing", "rushing", "receiving"]]
-    return df
-
-
-# all games
+def get_game_stats(id):
+    url = f"{BASE}/{id}"
+    soup = Soup.get(url)
+    tables = soup.find("table", {"class": "tablesaw compact"})
+    all = []
+    for table in tables:
+        trs = table.find("tr")[1:]
+        team = [parse_tr(tr) for tr in trs]
+        all.extend(team)
+    players = [player for player in all if player != None]
+    return players
 
 
 def get_games(date):
-    urls = get_boxscore_urls(date)
+    if isinstance(date, pd.Timestamp):
+        date = date.strftime("%Y-%m-%d")
+    url = f"{BASE}/nba/scores/{date}"
+    soup = Soup.get(url)
+    boxes = soup.find("div", {"class": "large-column-left scoreboard"}).find("a", {"href": "/nba/boxscore/"})
+    urls = list(set([box.attrs["href"] for box in boxes]))
     df = pd.DataFrame()
+    url = urls[0]
     for url in urls:
-        one = get_game_stats(url)
-        one["date"] = date
-        df = df.append(one)
+        stats = get_game_stats(id=url)
+        di = pd.DataFrame(stats, columns=["name", "position", "points"])
+        df = pd.concat([df, di])
+    df["date"] = date
     return df
 
 
 if __name__ == "__main__":
-    con = sqlite3.connect("data/football.db")
-    dates = pd.date_range(start="2021-09-09", end="today")
+    con = sqlite3.connect("data/basketball.db")
+    dates = pd.date_range(start="2021-10-19", end="today")
     df = pd.DataFrame()
     for date in tqdm(dates):
         try:
             games = get_games(date)
-            df = df.append(games)
-            time.sleep(random.uniform(1, 10) / 10)
+            df = pd.concat([df, games])
+            df.to_csv("data/basketball.csv", index=False)
+            time.sleep(random.uniform(1, 10)/10)
         except TypeError:
             pass
     df = df.reset_index(drop=True)
-    df[["passing", "rushing", "receiving"]] = df[["passing", "rushing", "receiving"]].apply(pd.to_numeric)
-    df.to_csv("data/football.csv", index=False)
+    df.to_csv("data/basketball.csv", index=False)
     df.to_sql(name="players", con=con, if_exists="replace", index=False)
