@@ -8,7 +8,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import LabelBinarizer, StandardScaler
 from sklearn_pandas import DataFrameMapper
 
-df = pd.read_csv("data/basketball.csv", parse_dates=[6])
+df = pd.read_csv("data/basketball.csv", parse_dates=[3])
 df = df.sort_values(["name", "date"]).reset_index(drop=True)
 df["points_1"] = df.groupby("name")["points"].shift(1)
 df["points_2"] = df.groupby("name")["points"].shift(2)
