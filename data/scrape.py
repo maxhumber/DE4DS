@@ -6,14 +6,19 @@ import pandas as pd
 from gazpacho import Soup
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
 from tqdm import tqdm
+
 
 # setup browser
 
 options = Options()
 options.headless = True
-browser = Firefox(executable_path="/usr/local/bin/geckodriver", options=options)
+options.binary_location = "/Applications/Firefox.app/Contents/MacOS/firefox"
+service = Service("/usr/local/bin/geckodriver")
+browser = Firefox(service=service, options=options)
 base = "https://www.pro-football-reference.com"
+
 
 # boxscores
 
