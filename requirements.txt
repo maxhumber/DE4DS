@@ -58,7 +58,7 @@ greenlet==1.1.2
 gunicorn==20.1.0
 h11==0.12.0
 httpcore==0.14.7
-httpx==0.22.0
+httpx==0.23.0
 idna==3.3
 importlib-metadata==4.11.3
 inflection==0.5.1
