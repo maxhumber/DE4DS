@@ -16,7 +16,7 @@ from data.scrape import get_games
 # setup
 default_args = {
     "owner": "Max",
-    "start_date": datetime(2022, 5, 18),
+    "start_date": datetime(2022, 6, 20),
     "retries": 1,
     "retry_delay": timedelta(minutes=5),
 }
