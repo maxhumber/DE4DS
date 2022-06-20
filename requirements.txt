@@ -111,7 +111,7 @@ ptyprocess==0.7.0
 pure-eval==0.2.2
 pycparser==2.21
 Pygments==2.12.0
-PyJWT==1.7.1
+PyJWT==2.4.0
 pyparsing==2.4.7
 pyrsistent==0.18.1
 python-daemon==2.3.0
