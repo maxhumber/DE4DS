@@ -79,7 +79,7 @@ jupyterlab-pygments==0.2.2
 jupyterlab-widgets==1.1.0
 lazy-object-proxy==1.7.1
 lockfile==0.12.2
-Mako==1.2.0
+Mako==1.2.2
 Markdown==3.3.6
 MarkupSafe==2.0.1
 marshmallow==3.15.0
