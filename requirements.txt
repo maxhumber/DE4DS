@@ -1,6 +1,6 @@
 alembic==1.7.7
 anyio==3.5.0
-apache-airflow==2.3.0
+apache-airflow==2.4.1
 apache-airflow-providers-ftp==2.1.2
 apache-airflow-providers-http==2.1.2
 apache-airflow-providers-imap==2.2.3
